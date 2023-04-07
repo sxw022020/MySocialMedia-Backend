@@ -4,6 +4,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+/*
+*
+Return Type: `*mux.Router` - a pointer to a `mux.Router` instance.
+*/
 func InitRouter() *mux.Router {
 	// Create a new Gorilla Mux router instance
 	router := mux.NewRouter()
