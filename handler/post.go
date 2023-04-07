@@ -14,6 +14,21 @@ import (
 `r *http.Request`:
 	- A pointer to an HTTP request object containing all the information about the incoming request
 */
+
+/*
+1. Why pass reference as a request?
+  - to avoid deep copy the request, just shallow copy
+    --> improve the performance
+
+2. Wht pass an object as a response?
+  - `ResponseWrite` is an interface which could be declared, not be implemented
+  - When used as a parameter in a function or method,
+    it allows the function to work with any concrete implementation
+    of the ResponseWriter interface, which makes the code more modular and flexible.
+  - `net/http“ package takes care of creating a concrete implementation of the `ResponseWriter`
+    --> you don't need to worry about the specific implementation details and
+    can focus on handling the HTTP request and constructing the response
+*/
 func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// parse from body of request to get a json object
 	fmt.Println("Recieved one post uploading request!")
