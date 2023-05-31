@@ -1,2 +1,5 @@
-# Note:
-- This project has finished, but I'm reviewing it; so I'm doing it from scratch, this repository will be filled gradually.
+# MySocialMedia: A Single Page Cloud-based Social Network Web Application Feb 2022 - April 2022
+• Delivered a RESTful web application by React with Redux and Go, building features about social media
+• Exploited Elasticsearch by creating inverted indices for the message of posts, enabling powerful full-text search
+• Implemented all functionalities (e.g., registration, posting) in Go with 100% code coverage and deployed the
+program to Google App Engine via Docker, substantially increasing the code maintainability and performance
