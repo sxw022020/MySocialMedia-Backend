@@ -20,7 +20,7 @@ import (
   - to avoid deep copy the request, just shallow copy
     --> improve the performance
 
-2. Wht pass an object as a response?
+2. Why pass an object as a response?
   - `ResponseWrite` is an interface which could be declared, not be implemented
   - When used as a parameter in a function or method,
     it allows the function to work with any concrete implementation
@@ -31,7 +31,7 @@ import (
 */
 func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// parse from body of request to get a json object
-	fmt.Println("Recieved one post uploading request!")
+	fmt.Println("Recieved 1 post uploading request!")
 
 	// creates a JSON decoder using json.NewDecoder(r.Body) to parse the request body
 	decoder := json.NewDecoder(r.Body)
