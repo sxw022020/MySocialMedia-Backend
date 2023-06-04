@@ -1,6 +1,7 @@
 package main
 
 import (
+	"MySocialMedia-Backend/backend"
 	"MySocialMedia-Backend/handler"
 
 	"fmt"
@@ -10,6 +11,9 @@ import (
 
 func main() {
 	fmt.Println("Service started!")
+
+	// Do the Elasticsearch Initialization when starting the program
+	backend.InitElasticsearchBackend()
 
 	/**
 	An HTTP server is started,
