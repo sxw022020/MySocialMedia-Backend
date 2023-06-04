@@ -6,6 +6,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/elastic/go-elasticsearch/esapi"
 	es7 "github.com/elastic/go-elasticsearch/v7"
 )
@@ -14,7 +16,7 @@ import (
 This file: a Go program for interacting with an Elasticsearch backend
 **/
 
-// Declares a global variable ESBackend of type *ElasticsearchBackend.
+// Declares a global variable `ESBackend` of type `*ElasticsearchBackend`.
 // This is the Elasticsearch client that will be used to communicate with the Elasticsearch server.
 var (
 	ESBackend *ElasticsearchBackend
@@ -22,12 +24,14 @@ var (
 
 // `ElasticsearchBackend struct` represents a backend service for Elasticsearch.
 // It contains a pointer to an `elastic`.
-// `Client“ object which is a client connection to an Elasticsearch server.
+// `Client` object which is a client connection to an Elasticsearch server.
 type ElasticsearchBackend struct {
-	Client *es7.Client
+	client *es7.Client
 }
 
 func InitElasticsearchBackend() {
+	fmt.Println("Initialization of Elasticsearch!")
+
 	cfg := es7.Config{
 		Addresses: []string{
 			constants.ES_URL,
@@ -52,14 +56,14 @@ func InitElasticsearchBackend() {
 		it's encapsulated in an ElasticsearchBackend instance and
 		assigned to the global ESBackend.
 	*/
-	ESBackend = &ElasticsearchBackend{Client: client}
+	ESBackend = &ElasticsearchBackend{client: client}
 
 	// mapping: JSON string that defines the structure of the index
 	// "keyword": `keyword`` fields are only searchable by their exact value
 	// 	- if you want to search for a specific user by username or password,
 	//    you'll need to provide the **exact** username or password,
 	//	  cannot use partial info to do search
-	// `"index": false`: it cannot be searched, but can still sppear in the results
+	// `"index": false`: it cannot be searched, but can still appear in the results
 	checkAndCreateIndex(constants.POST_INDEX, `{
 		"mappings": {
 			"properties": {
@@ -97,7 +101,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		Index: []string{indexName},
 	}
 
-	res, err := req.Do(context.Background(), ESBackend.Client)
+	res, err := req.Do(context.Background(), ESBackend.client)
 	if err != nil {
 		panic(err)
 	}
@@ -107,7 +111,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 
 	// `res.StatusCode == 404` means that the index does not exist
 	// `http.StatusNotFound` is 404
-	if res.StatusCode == 404 {
+	if res.StatusCode == http.StatusNotFound {
 		// Index does not exist, so create it
 		// - creating a new `IndicesCreateRequest` struct from the esapi package
 		req := esapi.IndicesCreateRequest{
@@ -123,7 +127,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		// - using the Do method of the IndicesCreateRequest struct,
 		//   which sends the HTTP request to the Elasticsearch instance and
 		//   returns the response.
-		res, err := req.Do(context.Background(), ESBackend.Client)
+		res, err := req.Do(context.Background(), ESBackend.client)
 		if err != nil {
 			panic(err)
 		}
