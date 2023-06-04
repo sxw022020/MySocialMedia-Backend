@@ -98,26 +98,19 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		fmt.Println("Error: ", err)
 	}
 
-	err = res.Body.Close()
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
-
 	// `res.StatusCode == 404` means that the index does not exist
 	// `http.StatusNotFound` is 404
 	if res.StatusCode == http.StatusNotFound {
 		// Index does not exist, so create it
 		// - creating a new `IndicesCreateRequest` struct from the esapi package
-		req := esapi.IndicesCreateRequest{
+		var req = esapi.IndicesCreateRequest{
 			Index: indexName,
 			// sets the body of the request
 			// - converting the mapping (which is a string) into a byte slice and
 			//   then creating a new Reader for those bytes.
 			//   This Reader can then be read by the Elasticsearch client to send the data
 			Body: bytes.NewReader([]byte(mapping)),
-		}
-
-		// executing the request to create the index
+		} // executing the request to create the index
 		// - using the Do method of the IndicesCreateRequest struct,
 		//   which sends the HTTP request to the Elasticsearch instance and
 		//   returns the response.
@@ -145,6 +138,11 @@ func checkAndCreateIndex(indexName string, mapping string) {
 
 			// `%v` verb to print the entire error map
 			fmt.Printf("[%s] Error creating index, response: %v", res.Status(), e)
+		}
+
+		err = res.Body.Close()
+		if err != nil {
+			fmt.Println("Error: ", err)
 		}
 	}
 }

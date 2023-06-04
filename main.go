@@ -13,7 +13,6 @@ func main() {
 	fmt.Println("Service started!")
 
 	// Do the Elasticsearch Initialization when starting the program
-	fmt.Println("!")
 	backend.InitElasticsearchBackend()
 
 	/**
