@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/elastic/go-elasticsearch/esapi"
@@ -16,13 +17,13 @@ import (
 This file: a Go program for interacting with an Elasticsearch backend
 **/
 
-// Declares a global variable `ESBackend` of type `*ElasticsearchBackend`.
+// ESBackend Declares a global variable `ESBackend` of type `*ElasticsearchBackend`.
 // This is the Elasticsearch client that will be used to communicate with the Elasticsearch server.
 var (
 	ESBackend *ElasticsearchBackend
 )
 
-// `ElasticsearchBackend struct` represents a backend service for Elasticsearch.
+// ElasticsearchBackend `ElasticsearchBackend struct` represents a backend service for Elasticsearch.
 // It contains a pointer to an `elastic`.
 // `Client` object which is a client connection to an Elasticsearch server.
 type ElasticsearchBackend struct {
@@ -107,7 +108,12 @@ func checkAndCreateIndex(indexName string, mapping string) {
 	}
 	// halting execution and reports the error
 	// then close the body
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(res.Body)
 
 	// `res.StatusCode == 404` means that the index does not exist
 	// `http.StatusNotFound` is 404
@@ -131,7 +137,12 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		if err != nil {
 			panic(err)
 		}
-		defer res.Body.Close() // defer the Close() call here
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+				panic(err)
+			}
+		}(res.Body) // defer the Close() call here
 
 		// checks if the HTTP response indicates an error
 		// (i.e., if the HTTP status code is 4xx or 5xx).
@@ -145,7 +156,8 @@ func checkAndCreateIndex(indexName string, mapping string) {
 				panic(err)
 			}
 
-			fmt.Printf("[%s] Error indexing document ID=%d", res.Status(), e)
+			// `%v` verb to print the entire error map
+			fmt.Printf("[%s] Error indexing document ID=%v", res.Status(), e)
 		}
 	}
 }
