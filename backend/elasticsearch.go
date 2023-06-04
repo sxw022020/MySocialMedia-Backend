@@ -64,7 +64,7 @@ func InitElasticsearchBackend() {
 	// `"index": false`: it cannot be searched, but can still sppear in the results
 	checkAndCreateIndex(constants.POST_INDEX, `{
 		"mappings": {
-			"properties:" {
+			"properties": {
 				"id": 		{ "type": "keyword" },
 				"user": 	{ "type": "keyword" },
 				"message": 	{ "type": "text" },
@@ -76,7 +76,7 @@ func InitElasticsearchBackend() {
 
 	checkAndCreateIndex(constants.USER_INDEX, `{
 		"mappings": {
-			"properties:" {
+			"properties": {
 				"username": 	{ "type": "keyword" },
 				"password": 	{ "type": "keyword" },
 				"age": 			{ "type": "long", "index": false },
