@@ -6,8 +6,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/elastic/go-elasticsearch/esapi"
 	es7 "github.com/elastic/go-elasticsearch/v7"
 )
@@ -109,7 +107,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 
 	// `res.StatusCode == 404` means that the index does not exist
 	// `http.StatusNotFound` is 404
-	if res.StatusCode == http.StatusNotFound {
+	if res.StatusCode == 404 {
 		// Index does not exist, so create it
 		// - creating a new `IndicesCreateRequest` struct from the esapi package
 		req := esapi.IndicesCreateRequest{
