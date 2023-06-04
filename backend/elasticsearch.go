@@ -6,24 +6,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-
 	"github.com/elastic/go-elasticsearch/esapi"
 	es7 "github.com/elastic/go-elasticsearch/v7"
+	"net/http"
 )
 
 /**
 This file: a Go program for interacting with an Elasticsearch backend
 **/
 
-// ESBackend Declares a global variable `ESBackend` of type `*ElasticsearchBackend`.
+// ESBackend a global variable `ESBackend` of type `*ElasticsearchBackend`.
 // This is the Elasticsearch client that will be used to communicate with the Elasticsearch server.
 var (
 	ESBackend *ElasticsearchBackend
 )
 
-// ElasticsearchBackend `ElasticsearchBackend struct` represents a backend service for Elasticsearch.
+// ElasticsearchBackend represents a backend service for Elasticsearch.
 // It contains a pointer to an `elastic`.
 // `Client` object which is a client connection to an Elasticsearch server.
 type ElasticsearchBackend struct {
@@ -42,14 +40,7 @@ func InitElasticsearchBackend() {
 	}
 	client, err := es7.NewClient(cfg)
 	if err != nil {
-		/*
-			When the panic function is called,
-			it immediately stops the execution of the current function and
-			begins unwinding the stack of the goroutine,
-			running any deferred functions along the way.
-			If that unwinding reaches the top of the goroutine's stack, the program dies.
-		*/
-		panic(err)
+		fmt.Println("Error: ", err)
 	}
 
 	/*
@@ -104,16 +95,13 @@ func checkAndCreateIndex(indexName string, mapping string) {
 
 	res, err := req.Do(context.Background(), ESBackend.client)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error: ", err)
 	}
-	// halting execution and reports the error
-	// then close the body
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(res.Body)
+
+	err = res.Body.Close()
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 
 	// `res.StatusCode == 404` means that the index does not exist
 	// `http.StatusNotFound` is 404
@@ -135,14 +123,13 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		//   returns the response.
 		res, err := req.Do(context.Background(), ESBackend.client)
 		if err != nil {
-			panic(err)
+			fmt.Println("Error: ", err)
 		}
-		defer func(Body io.ReadCloser) {
-			err := Body.Close()
-			if err != nil {
-				panic(err)
-			}
-		}(res.Body) // defer the Close() call here
+
+		err = res.Body.Close()
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
 
 		// checks if the HTTP response indicates an error
 		// (i.e., if the HTTP status code is 4xx or 5xx).
@@ -153,11 +140,11 @@ func checkAndCreateIndex(indexName string, mapping string) {
 			// reading the body of the error response from the Elasticsearch instance,
 			// decoding the JSON into the e map, and checking if there was an error doing so
 			if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
-				panic(err)
+				fmt.Println("Error: ", err)
 			}
 
 			// `%v` verb to print the entire error map
-			fmt.Printf("[%s] Error indexing document ID=%v", res.Status(), e)
+			fmt.Printf("[%s] Error creating index, response: %v", res.Status(), e)
 		}
 	}
 }
