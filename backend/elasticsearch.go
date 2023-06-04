@@ -6,9 +6,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/elastic/go-elasticsearch/esapi"
 	es7 "github.com/elastic/go-elasticsearch/v7"
-	"net/http"
 )
 
 /**
