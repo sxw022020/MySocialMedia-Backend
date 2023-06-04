@@ -1,4 +1,2 @@
+## Basics:
 1. The name of a `method` to be imported in one package, should have Capital letter in the beginning
-
-## Syntax:
-1. `` for raw literal
