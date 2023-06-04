@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="haileysun23@34.94.200.206:22" type="ssh/sftp" uuid="960a03da-afb4-40fd-b5e4-80111d91ba8e">
+        <config>
+          <option name="projectRootOnTarget" value="/home/haileysun23/MySocialMedia-Backend" />
+          <option name="serverName" value="haileysun23@34.94.200.206:22 key" />
+          <option name="useRsync" value="true" />
+        </config>
+        <ContributedStateBase type="GoLanguageRuntime">
+          <config>
+            <option name="goPath" value="/home/haileysun23/go" />
+            <option name="goRoot" value="/usr/bin/go" />
+            <option name="goVersion" value="go1.20.4 linux/amd64" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>
