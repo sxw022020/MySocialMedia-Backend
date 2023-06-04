@@ -19,6 +19,7 @@ This file: a Go program for interacting with an Elasticsearch backend
 // ESBackend a global variable `ESBackend` of type `*ElasticsearchBackend`.
 // This is the Elasticsearch client that will be used to communicate with the Elasticsearch server.
 var (
+	// ESBackend a pointer of ElasticsearchBackend
 	ESBackend *ElasticsearchBackend
 )
 
@@ -26,7 +27,8 @@ var (
 // It contains a pointer to an `elastic`.
 // `Client` object which is a client connection to an Elasticsearch server.
 type ElasticsearchBackend struct {
-	client *es7.Client
+	// client a pointer of es7.Client
+	Client *es7.Client
 }
 
 func InitElasticsearchBackend() {
@@ -49,8 +51,9 @@ func InitElasticsearchBackend() {
 		it's encapsulated in an ElasticsearchBackend instance and
 		assigned to the global ESBackend.
 	*/
-	ESBackend = &ElasticsearchBackend{client: client}
+	ESBackend = &ElasticsearchBackend{Client: client}
 
+	fmt.Println("Creation of Index!")
 	// mapping: JSON string that defines the structure of the index
 	// "keyword": `keyword`` fields are only searchable by their exact value
 	// 	- if you want to search for a specific user by username or password,
@@ -79,8 +82,6 @@ func InitElasticsearchBackend() {
 			}
 		}
 	}`)
-
-	fmt.Println("Indexes are created!")
 }
 
 /*
@@ -94,7 +95,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		Index: []string{indexName},
 	}
 
-	res, err := req.Do(context.Background(), ESBackend.client)
+	res, err := req.Do(context.Background(), ESBackend.Client)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
@@ -115,7 +116,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		// - using the Do method of the IndicesCreateRequest struct,
 		//   which sends the HTTP request to the Elasticsearch instance and
 		//   returns the response.
-		res, err := req.Do(context.Background(), ESBackend.client)
+		res, err := req.Do(context.Background(), ESBackend.Client)
 		if err != nil {
 			fmt.Println("Error: ", err)
 		}
@@ -145,5 +146,9 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		if err != nil {
 			fmt.Println("Error: ", err)
 		}
+
+		fmt.Println("Indexes are created!")
+	} else {
+		fmt.Println("Index: " + indexName + " has already existed!")
 	}
 }
