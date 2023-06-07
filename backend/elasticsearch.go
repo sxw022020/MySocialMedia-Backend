@@ -6,10 +6,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/elastic/go-elasticsearch/esapi"
 	es7 "github.com/elastic/go-elasticsearch/v7"
+	"net/http"
 )
 
 /**
@@ -31,6 +30,7 @@ type ElasticsearchBackend struct {
 	Client *es7.Client
 }
 
+// InitElasticsearchBackend 0. Initialization of ElasticsearchBackend
 func InitElasticsearchBackend() {
 	fmt.Println("Initialization of Elasticsearch!")
 
@@ -83,6 +83,37 @@ func InitElasticsearchBackend() {
 		}
 	}`)
 }
+
+// ReadFromES The function takes two arguments: query (a map of type string to interface{}) and index (a string).
+// - The query represents the Elasticsearch query in a structured format, and the index is the name of the Elasticsearch index to search.
+// - `map[string]interface{}`: a map of type string to interface{}
+func (backend *ElasticsearchBackend) ReadFromES(query map[string]interface{}, index string) (*esapi.Response, error) {
+	var (
+		res *esapi.Response
+		err error
+	)
+
+	queryJSON, err := json.Marshal(query)
+	if err != nil {
+		return nil, err
+	}
+
+	searchRequest := esapi.SearchRequest{
+		Index:  []string{index},
+		Body:   bytes.NewReader(queryJSON),
+		Pretty: true,
+	}
+
+	res, err = searchRequest.Do(context.Background(), backend.Client)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+////////// Helper Functions //////////
 
 /*
 This function checks:
