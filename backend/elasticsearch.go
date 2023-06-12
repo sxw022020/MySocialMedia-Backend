@@ -136,7 +136,7 @@ func checkAndCreateIndex(indexName string, mapping string) {
 	if res.StatusCode == http.StatusNotFound {
 		// Index does not exist, so create it
 		// - creating a new `IndicesCreateRequest` struct from the esapi package
-		var req = esapi.IndicesCreateRequest{
+		req := esapi.IndicesCreateRequest{
 			Index: indexName,
 			// sets the body of the request
 			// - converting the mapping (which is a string) into a byte slice and
@@ -148,11 +148,6 @@ func checkAndCreateIndex(indexName string, mapping string) {
 		//   which sends the HTTP request to the Elasticsearch instance and
 		//   returns the response.
 		res, err := req.Do(context.Background(), ESBackend.Client)
-		if err != nil {
-			fmt.Println("Error: ", err)
-		}
-
-		err = res.Body.Close()
 		if err != nil {
 			fmt.Println("Error: ", err)
 		}
