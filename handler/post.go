@@ -40,10 +40,10 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// initializes a `model.Post` struct variable `p`
 	var p model.Post
 
-	// decodes the JSON request body into the `model.Post` struct using `decoder Decode(&p)`
+	// decodes the JSON request body into the `model.Post` struct using `decoder.Decode(&p)`
 	// If there is an error during decoding, the function will panic and stop execution
 	if err := decoder.Decode(&p); err != nil {
-		panic(err)
+		fmt.Println("Error: ", err)
 	}
 
 	// writes a response to the client using `fmt.Fprintf(w, "Post received: %s\n", p.Message)`, including the message from the uploaded post
