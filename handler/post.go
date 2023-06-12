@@ -5,7 +5,23 @@ import (
 	"MySocialMedia-Backend/service"
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"net/http"
+	"path/filepath"
+)
+
+var (
+	mediaTypes = map[string]string{
+		".jpeg": "image",
+		".jpg":  "image",
+		".gif":  "image",
+		".png":  "image",
+		".mov":  "video",
+		".mp4":  "video",
+		".avi":  "video",
+		".flv":  "video",
+		".wmv":  "video",
+	}
 )
 
 // 1. Handle incoming requests for uploading posts
@@ -34,6 +50,37 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// parse from body of request to get a json object
 	fmt.Println("Recieved 1 post uploading request!")
 
+	p := model.Post{
+		Id:      uuid.New().String(),
+		User:    r.FormValue("user"),
+		Message: r.FormValue("message"),
+	}
+
+	file, header, err := r.FormFile("media_file")
+	if err != nil {
+		http.Error(w, "Media file is not available", http.StatusBadRequest)
+		fmt.Printf("Media file is not available %v\n", err)
+		return
+	}
+
+	suffix := filepath.Ext(header.Filename)
+	if t, ok := mediaTypes[suffix]; ok {
+		p.Type = t
+	} else {
+		p.Type = "unknown"
+	}
+
+	err = service.SavePost(&p, file)
+	if err != nil {
+		http.Error(w, "Failed to save post to backend", http.StatusInternalServerError)
+		fmt.Printf("Failed to save post to backend %w\n", err)
+		return
+	}
+
+	fmt.Println("Post is saved successfully")
+
+	/* Original Implementation, left here for review:
+
 	// creates a JSON decoder using json.NewDecoder(r.Body) to parse the request body
 	decoder := json.NewDecoder(r.Body)
 
@@ -48,6 +95,8 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	// writes a response to the client using `fmt.Fprintf(w, "Post received: %s\n", p.Message)`, including the message from the uploaded post
 	fmt.Fprintf(w, "Post received: %s\n", p.Message)
+
+	*/
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
