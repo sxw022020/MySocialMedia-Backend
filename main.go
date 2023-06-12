@@ -15,6 +15,9 @@ func main() {
 	// Do the Elasticsearch Initialization when starting the program
 	backend.InitElasticsearchBackend()
 
+	// Do the GCS Initialization when starting the program
+	backend.InitGCSBackend()
+
 	/**
 	An HTTP server is started,
 	1. listening on port 8080 (request sent from Postman) and
