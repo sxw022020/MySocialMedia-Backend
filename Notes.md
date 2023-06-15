@@ -1,3 +1,10 @@
+## Syntax:
+1. `map[string]interface{}`
+    - represents a map with string keys and values of any type.
+    - `map` indicates that we're defining a `map` data structure.
+    - `string` specifies the type of the `keys` in the map, in this case, they must be strings.
+    - `interface{}` is used as the `value` type. In Go, interface{} is the empty interface, which represents any type. It can hold values of any underlying type.
+
 ## Basics:
 1. The name of a `method` to be imported in one package, should have Capital letter in the beginning
 
