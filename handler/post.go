@@ -8,6 +8,8 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"path/filepath"
+
+	"github.com/form3tech-oss/jwt-go"
 )
 
 var (
@@ -50,9 +52,14 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// parse from body of request to get a json object
 	fmt.Println("Recieved 1 post uploading request!")
 
+	// use username which is inside of token
+	user := r.Context().Value("user")
+	claims := user.(*jwt.Token).Claims
+	username := claims.(jwt.MapClaims)["username"]
+
 	p := model.Post{
 		Id:      uuid.New().String(),
-		User:    r.FormValue("user"),
+		User:    username.(string),
 		Message: r.FormValue("message"),
 	}
 
