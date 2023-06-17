@@ -29,6 +29,7 @@ type ApplicationConfig struct {
 	TokenConfig         *TokenInfo         `yaml:"token"`
 }
 
+// LoadApplicationConfig : parse the deploy.yml file
 func LoadApplicationConfig(configDir, configFile string) (*ApplicationConfig, error) {
 	content, err := ioutil.ReadFile(filepath.Join(configDir, configFile))
 	if err != nil {
