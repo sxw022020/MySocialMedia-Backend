@@ -4,6 +4,14 @@
     - `map` indicates that we're defining a `map` data structure.
     - `string` specifies the type of the `keys` in the map, in this case, they must be strings.
     - `interface{}` is used as the `value` type. In Go, interface{} is the empty interface, which represents any type. It can hold values of any underlying type.
+    - when you retrieve values from a map[string]interface{}, you'll usually need to perform a type assertion or type switch to work with the original value's type:
+        ```Java
+        if age, ok := data["age"].(int); ok {
+            fmt.Println("The age is", age)
+        } else {
+            // handle case where age is not an int
+        }
+        ```
 
 ## Basics:
 1. The name of a `method` to be imported in one package, should have Capital letter in the beginning
