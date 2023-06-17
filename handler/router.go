@@ -13,6 +13,7 @@ import (
 var mySigningKey []byte
 
 func InitRouter(config *util.TokenInfo) http.Handler {
+	// `[]byte(config.Secret)` converts the string `config.Secret` into a slice of bytes.
 	mySigningKey = []byte(config.Secret)
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
@@ -34,9 +35,11 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	authRouter.HandleFunc("/upload", postUploadHandler).Methods("POST")
 	authRouter.HandleFunc("/search", searchHandler).Methods("GET")
 
+	// accept requests from any origin
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "DELETE"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "POST"})
 
+	// applies the CORS rules to the router and returns it
 	return handlers.CORS(originsOk, headersOk, methodsOk)(router)
 }
