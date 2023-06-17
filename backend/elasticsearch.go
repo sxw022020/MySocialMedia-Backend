@@ -89,25 +89,35 @@ func InitElasticsearchBackend(config *util.ElasticsearchInfo) {
 
 // ReadFromES The function takes two arguments: query (a map of type string to interface{}) and index (a string).
 // - The query represents the Elasticsearch query in a structured format, and the index is the name of the Elasticsearch index to search.
-// - `map[string]interface{}`: a map of type string to interface{}
 func (backend *ElasticsearchBackend) ReadFromES(query map[string]interface{}, index string) (*esapi.Response, error) {
 	var (
 		res *esapi.Response
 		err error
 	)
 
+	// `Marshal(query)` takes Go data, in this case, `query`, and converts it to some other format (like JSON or XML).
+	// It is commonly used when you want to send data over a network or save it to a file.
 	queryJSON, err := json.Marshal(query)
 	if err != nil {
 		return nil, err
 	}
 
+	// creating an instance of the `esapi.SearchRequest` struct from the Elasticsearch Go client library
 	searchRequest := esapi.SearchRequest{
+		// `index`: This field represents the name of the Elasticsearch index where the search will be performed
 		Index:  []string{index},
 		Body:   bytes.NewReader(queryJSON),
 		Pretty: true,
 	}
 
+	// `backend.Client`:
+	// This is an HTTP client that sends the request.
+	// The client handles making the request and returning the response.
+	// The client is usually created during the initialization of the Elasticsearch client.
 	res, err = searchRequest.Do(context.Background(), backend.Client)
+	// The Do method of searchRequest returns two values:
+	//    - An `*http.Response` which is a pointer to a `http.Response` struct that contains the server's response to the HTTP request.
+	//    - An `error` which is a built-in interface type for representing error conditions.
 
 	if err != nil {
 		return nil, err
