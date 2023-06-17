@@ -2,7 +2,7 @@ package util
 
 import (
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
@@ -30,16 +30,20 @@ type ApplicationConfig struct {
 }
 
 // LoadApplicationConfig : parse the deploy.yml file
+// configDir: the directory a configuration file locates at
+// configFile: the name of a configuration file
 func LoadApplicationConfig(configDir, configFile string) (*ApplicationConfig, error) {
-	content, err := ioutil.ReadFile(filepath.Join(configDir, configFile))
+	content, err := os.ReadFile(filepath.Join(configDir, configFile))
 	if err != nil {
 		return nil, err
 	}
 
+	// unmarshal YAML content into an ApplicationConfig struct
 	var config ApplicationConfig
 	err = yaml.Unmarshal(content, &config)
 	if err != nil {
 		return nil, err
 	}
+
 	return &config, nil
 }
