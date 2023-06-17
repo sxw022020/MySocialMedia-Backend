@@ -3,6 +3,7 @@ package main
 import (
 	"MySocialMedia-Backend/backend"
 	"MySocialMedia-Backend/handler"
+	"MySocialMedia-Backend/util"
 
 	"fmt"
 	"log"
@@ -11,6 +12,11 @@ import (
 
 func main() {
 	fmt.Println("Service started!")
+
+	config, err := util.LoadApplicationConfig("conf", "deploy.yml")
+	if err != nil {
+		panic(err)
+	}
 
 	// Do the Elasticsearch Initialization when starting the program
 	backend.InitElasticsearchBackend()
@@ -24,5 +30,5 @@ func main() {
 	2. using the router initialized by the handler.InitRouter() function to handle incoming requests.
 	3. If the server encounters any errors, the log.Fatal function is used to log the error message and exit the program with a non-zero status code.
 	*/
-	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter()))
+	log.Fatal(http.ListenAndServe(":8080", handler.InitRouter(config.TokenConfig)))
 }
