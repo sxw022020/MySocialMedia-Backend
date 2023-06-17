@@ -52,7 +52,9 @@ func InitElasticsearchBackend(config *util.ElasticsearchInfo) {
 		it's encapsulated in an ElasticsearchBackend instance and
 		assigned to the global ESBackend.
 	*/
-	ESBackend = &ElasticsearchBackend{Client: client}
+	ESBackend = &ElasticsearchBackend{
+		Client: client,
+	}
 
 	fmt.Println("Creation of Index!")
 	// mapping: JSON string that defines the structure of the index
