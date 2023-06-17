@@ -1,7 +1,7 @@
 package backend
 
 import (
-	"MySocialMedia-Backend/constants"
+	"MySocialMedia-Backend/util"
 	"cloud.google.com/go/storage"
 	"context"
 	"encoding/json"
@@ -21,7 +21,7 @@ type GoogleCloudStorageBackend struct {
 	Bucket string
 }
 
-func InitGCSBackend() {
+func InitGCSBackend(config *util.GCSInfo) {
 	client, err := storage.NewClient(context.Background())
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -29,7 +29,7 @@ func InitGCSBackend() {
 
 	GCSBackend = &GoogleCloudStorageBackend{
 		Client: client,
-		Bucket: constants.GCS_BUCKET,
+		Bucket: config.Bucket,
 	}
 }
 
