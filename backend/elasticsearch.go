@@ -114,7 +114,7 @@ func (backend *ElasticsearchBackend) ReadFromES(query map[string]interface{}, in
 	return res, nil
 }
 
-////////// Helper Functions //////////
+////////// Helper Function //////////
 
 /*
 This function checks:
