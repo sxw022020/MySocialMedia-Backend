@@ -20,10 +20,10 @@ func main() {
 	}
 
 	// Do the Elasticsearch Initialization when starting the program
-	backend.InitElasticsearchBackend()
+	backend.InitElasticsearchBackend(config.ElasticsearchConfig)
 
 	// Do the GCS Initialization when starting the program
-	backend.InitGCSBackend()
+	backend.InitGCSBackend(config.GCSConfig)
 
 	/**
 	An HTTP server is started,
