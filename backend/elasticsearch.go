@@ -2,6 +2,7 @@ package backend
 
 import (
 	"MySocialMedia-Backend/constants"
+	"MySocialMedia-Backend/util"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -31,15 +32,15 @@ type ElasticsearchBackend struct {
 }
 
 // InitElasticsearchBackend 0. Initialization of ElasticsearchBackend
-func InitElasticsearchBackend() {
+func InitElasticsearchBackend(config *util.ElasticsearchInfo) {
 	fmt.Println("Initialization of Elasticsearch!")
 
 	cfg := es7.Config{
 		Addresses: []string{
-			constants.ES_URL,
+			config.Address,
 		},
-		Username: constants.ES_USERNAME,
-		Password: constants.ES_PASSWORD,
+		Username: config.Username,
+		Password: config.Password,
 	}
 	client, err := es7.NewClient(cfg)
 	if err != nil {
