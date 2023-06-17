@@ -1,10 +1,12 @@
 elasticsearch:
-  address: "http://10.128.0.69:9200"
-  username: "sean"
-  password: "12345678"
+  #   ES_URL Elasticsearch in a VM listen to port 9200 of the VM to receive request sent to port 9200
+  #   10.168.0.4: GCP's VM internal IP
+  address: "http://10.168.0.4:9200"
+  username: "haileysun"
+  password: "5683926498"
 
 gcs:
-  bucket: "sean-bucket"
+  bucket: "bucket-mysocialmedia"
 
 token:
   secret: "secret"
