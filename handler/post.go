@@ -106,7 +106,7 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	*/
 }
 
-func searchHandler(w http.ResponseWriter, r *http.Request) {
+func postSearchHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received one request for search")
 	w.Header().Set("Content-Type", "application/json")
 

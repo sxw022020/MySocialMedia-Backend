@@ -33,7 +33,7 @@ func InitRouter(config *util.TokenInfo) http.Handler {
 	authRouter.Use(jwtMiddleware.Handler)
 
 	authRouter.HandleFunc("/upload", postUploadHandler).Methods("POST")
-	authRouter.HandleFunc("/search", searchHandler).Methods("GET")
+	authRouter.HandleFunc("/search", postSearchHandler).Methods("GET")
 
 	// accept requests from any origin
 	originsOk := handlers.AllowedOrigins([]string{"*"})
