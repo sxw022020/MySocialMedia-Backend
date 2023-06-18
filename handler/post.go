@@ -52,9 +52,11 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// parse from body of request to get a json object
 	fmt.Println("Recieved 1 post uploading request!")
 
-	// use username which is inside of token
+	// use value of "user" which is inside of token
 	user := r.Context().Value("user")
+	// The fetched "user" is asserted to be of type `*jwt.Token` (a pointer to a JWT Token) and then the `Claims` field (which contains all the claims of the JWT token) is extracted from the token.
 	claims := user.(*jwt.Token).Claims
+	// The Claims are asserted to be of type `jwt.MapClaims` (a map where the keys are strings and the values are interface{}). The "username" claim is then fetched from this map.
 	username := claims.(jwt.MapClaims)["username"]
 
 	p := model.Post{
@@ -70,6 +72,7 @@ func postUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// `filepath.Ext` function is used to extract the file extension from a file path.
 	suffix := filepath.Ext(header.Filename)
 	if t, ok := mediaTypes[suffix]; ok {
 		p.Type = t
