@@ -19,13 +19,13 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 	// sets the "Content-Type" of the HTTP response to "text/plain".
 	w.Header().Set("Content-Type", "text/plain")
 
-	// If the HTTP method of the request is "OPTIONS", the function returns immediately.
-	// This is typically done to handle pre-flight requests in CORS scenarios, which are made using the OPTIONS HTTP method.
+	// If the HTTP method of the request is "OPTIONS" (which is typically used for CORS preflight requests), the function returns immediately.
+	// This is done because the OPTIONS requests do not require further processing.
 	if r.Method == "OPTIONS" {
 		return
 	}
 
-	// Get User information from client
+	// Get `User` information from client, read the request body (which is assumed to be JSON) into `model.User`
 	decoder := json.NewDecoder(r.Body)
 	var user model.User
 	if err := decoder.Decode(&user); err != nil {
@@ -41,6 +41,8 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// A conditional check in Go that checks if the exists variable is `false`
+	//     - `service.CheckUser` return `boolean, error`
 	if !exists {
 		http.Error(w, "User doesn't exist or wrong password", http.StatusUnauthorized)
 		fmt.Printf("User doesn't exist or wrong password\n")
@@ -49,10 +51,12 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Generate JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		// adds a claim where the claim key is "username" and the claim value is the username of the user who is signing in. This means that the JWT will include information about the user's username.
 		"username": user.Username,
 		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	})
 
+	// signs the token using the secret key "your-secret-key" and returns the final JWT in its string form.
 	tokenString, err := token.SignedString([]byte("your-secret-key"))
 	if err != nil {
 		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
@@ -60,7 +64,11 @@ func signinHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(tokenString))
+	//  If no error occurred, this line sends the JWT to the client in the response body. This JWT should be used by the client for subsequent authenticated requests.
+	_, err = w.Write([]byte(tokenString))
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
